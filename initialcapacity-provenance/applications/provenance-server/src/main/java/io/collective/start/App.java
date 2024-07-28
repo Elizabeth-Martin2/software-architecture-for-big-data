@@ -4,14 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.collective.articles.ArticleDataGateway;
 import io.collective.articles.ArticleRecord;
 import io.collective.articles.ArticlesController;
-import io.collective.restsupport.BasicApp;
-import io.collective.restsupport.NoopController;
+import io.collective.restsupport.BasicApp; // compiler can't resolve >_<
+import io.collective.restsupport.NoopController; // compiler can't resolve >_<
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.TimeZone;
 
+// Added imports
+import io.collective.endpoints.EndpointDataGateway;
+import io.collective.endpoints.EndpointTask;
+import io.collective.endpoints.EndpointWorkFinder;
+import io.collective.endpoints.EndpointWorker;
+import io.collective.workflow.WorkFinder; // compiler can't resolve >_<
+import io.collective.workflow.WorkScheduler; // compiler can't resolve >_<
+import io.collective.workflow.Worker; // compiler can't resolve >_<
+import io.collective.restsupport.RestTemplate; // compiler can't resolve >_<
+import java.util.Collections;
 
 public class App extends BasicApp {
     private static ArticleDataGateway articleDataGateway = new ArticleDataGateway(List.of(
@@ -23,9 +32,15 @@ public class App extends BasicApp {
     public void start() {
         super.start();
 
-        { // todo - start the endpoint worker
+        // todo - start the endpoint worker
+        EndpointWorker worker = new EndpointWorker(new RestTemplate(), articleDataGateway);
+        List<Worker<EndpointTask>> worker_list = Collections.singletonList(worker);
+        
+        EndpointDataGateway endpoint = new EndpointDataGateway();
+        WorkFinder<EndpointTask> work_finder = new EndpointWorkFinder(endpoint);
 
-        }
+        WorkScheduler<EndpointTask> scheduler = new WorkScheduler<>(work_finder, worker_list, 300);
+        scheduler.start();
     }
 
     public App(int port) {
