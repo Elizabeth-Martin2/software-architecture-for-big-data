@@ -62,10 +62,18 @@ application in both local and production environments.
     FLYWAY_CLEAN_DISABLED=false flyway -user=milk -password=milk -url="jdbc:postgresql://localhost:5432/milk_test" -locations=filesystem:databases/milk clean migrate
     ```
 
+    ```bash
+    FLYWAY_CLEAN_DISABLED=false ./Downloads/flyway-commandline-10.17.1-windows-x64/flyway-10.17.1/flyway.cmd -user=milk -password=milk -url="jdbc:postgresql://localhost:5432/milk_test" -locations=filesystem:C:/Users/Lizzie/Desktop/software-architecture-for-big-data/initialcapacity-the-milk-problem-continued/databases/milk clean migrate
+    ```
+
 1.  Migrate the development database with Flyway.
 
     ```bash
     FLYWAY_CLEAN_DISABLED=false flyway -user=milk -password=milk -url="jdbc:postgresql://localhost:5432/milk_development" -locations=filesystem:databases/milk clean migrate
+    ```
+
+    ```bash
+    FLYWAY_CLEAN_DISABLED=false ./Downloads/flyway-commandline-10.17.1-windows-x64/flyway-10.17.1/flyway.cmd -user=milk -password=milk -url="jdbc:postgresql://localhost:5432/milk_development" -locations=filesystem:C:/Users/Lizzie/Desktop/software-architecture-for-big-data/initialcapacity-the-milk-problem-continued/databases/milk clean migrate
     ```
 
 1.  Populate development data with a product scenario.
@@ -74,6 +82,9 @@ application in both local and production environments.
     PGPASSWORD=milk psql -h'127.0.0.1' -Umilk -f applications/products-server/src/test/resources/scenarios/products.sql milk_development
     ```
 
+    ```bash
+    PGPASSWORD=milk ./Program\ Files/PostgreSQL/16/bin/psql -h'127.0.0.1' -Umilk -f C:/Users/Lizzie/Desktop/software-architecture-for-big-data/initialcapacity-the-milk-problem-continued/applications/products-server/src/test/resources/scenarios/products.sql milk_development
+    ```
 ### Run tests
 
 Use Gradle to run tests. You'll see a few failures at first.

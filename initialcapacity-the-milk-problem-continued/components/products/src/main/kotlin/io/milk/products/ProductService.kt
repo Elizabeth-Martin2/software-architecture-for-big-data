@@ -18,6 +18,7 @@ class ProductService(private val dataGateway: ProductDataGateway) {
     }
 
     fun decrementBy(purchase: PurchaseInfo) {
-        // TODO - DIRTY READS - Implement the decrementBy function.
+        // TODO - DIRTY READS (done) - Implement the decrementBy function.
+        dataGateway.decrementBy(purchase)
     }
 }

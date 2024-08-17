@@ -21,8 +21,8 @@ import test.milk.TestScenarioSupport
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-// TODO - MESSAGING - Remove the @Ignore annotation
-@Ignore
+// TODO - MESSAGING (done) - Remove the @Ignore annotation
+// @Ignore
 class AppRabbitTest {
     private val testSupport = RabbitTestSupport()
     private val engine = TestApplicationEngine()
@@ -72,20 +72,29 @@ class AppRabbitTest {
 
     @Test
     fun testSaferQuantity() {
-        // TODO - MESSAGING -
+        // TODO - MESSAGING (done) -
         //  test a "safer" purchase, one where you are using a different "safer" queue
         //  then wait for consumers,
         //  then make a request
         //  and assert that the milk count 130
+        makePurchase(PurchaseInfo(105442, "milk", 1), routingKey = "safer")
+        testSupport.waitForConsumers("safer-products")
 
+        with(engine) {
+            with(handleRequest(HttpMethod.Get, "/")) {
+                val compact = response.content!!.replace("\\s".toRegex(), "")
+                val milk = "<td>milk</td><td>([0-9]+)</td>".toRegex().find(compact)!!.groups[1]!!.value
+                assertEquals(130, milk.toInt())
+            }
+        }
     }
 
     @Test
     fun testBestCase() {
         makePurchases(PurchaseInfo(105443, "bacon", 1), routingKey = "safer")
-        // TODO - MESSAGING -
+        // TODO - MESSAGING (done) -
         //  uncomment the below after introducing the safer product update handler with manual acknowledgement
-        //  testSupport.waitForConsumers("safer-products")
+        testSupport.waitForConsumers("safer-products")
 
         with(engine) {
             with(handleRequest(HttpMethod.Get, "/")) {
